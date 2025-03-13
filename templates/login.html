@@ -1,0 +1,32 @@
+{% extends "./layout.html" %}
+
+{% block css_link %}
+{% load static %}
+<link rel = "stylesheet" href = "{% static 'css/styles1.css' %}">
+{% endblock %}
+
+{% block js_link %}
+<script src = "{% static 'js/script2.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+Contestants Login Page
+{% endblock %}
+
+{% block top_part %}
+<h1>E-CONTEST</h1>
+<div id = "hello">Welcome <br/>Participant</div>
+{% endblock %}
+
+{% block page_content %}
+
+{% if error %}
+<p id = "err" style = "display: none;">{{ error }}</p>
+{% endif %}
+<div id = "loginform">
+    <form action='.' method='POST'>{% csrf_token %}
+        {{ form.as_p }}
+        <input name = "submit" type = "submit" value = "Login">
+    </form>
+</div>
+{% endblock %}

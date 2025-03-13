@@ -1,0 +1,37 @@
+{% extends "./layout.html" %}
+
+{% block css_link %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles1.css' %}">
+{% endblock %}
+
+{% block js_link %}
+<script src = "{% static 'js/script2.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+Contestant Registration Page
+{% endblock %}
+
+{% block top_part %}
+<h1>E-CONTEST</h1>
+<div id = "hello">Welcome <br/>Admin</div>
+{% endblock %}
+
+{% block page_content %}
+
+{% if error %}
+<p id = "err" style = "display: none;">{{error}}</p>
+{% endif %}
+
+
+<div id="registerform">
+    <form action='.' method='POST'>{% csrf_token %}
+        {{ form.as_p }}
+        <input type='submit' value='Register'>
+    </form>
+</div>
+
+
+
+{% endblock %}

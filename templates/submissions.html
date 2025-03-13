@@ -1,0 +1,53 @@
+
+{% extends "./layout.html" %}
+
+{% block css_link %}
+{% load static %}
+<link rel = "stylesheet" href = "{% static 'css/styles1.css' %}">
+{% endblock %}
+
+{% block js_link %}
+<script src = "{% static 'js/script1.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+Submissions
+{% endblock %}
+
+{% block top_part %}
+<h1>YOUR SUBMISSIONS</h1>
+<div id = "hello">Welcome {{name}} </div>
+<form id = "timeform" name = "timeform" method = "POST" action = "{% url 'dashboard' %}">
+	<input type = "hidden" name = "remTime" id = "remTime" value = "{{rem_time}}">
+</form>
+{% endblock %}
+
+{% block page_content %}
+<div class = "content">
+	<div id="navbar">
+		<ul>
+			<li><a href = "{% url 'dashboard' %}">GO BACK</a></li>
+		</ul>
+	</div>
+	<div class = "table-container">
+		<table>
+			<tr>
+				<th>#</th>
+				<th>QUESTION NUMBER</th>
+				<th>RESULT</th>
+				<th>SCORE</th>
+				<th>SUBMISSION TIME</th>
+			</tr>
+			{% for sub in submissions %}
+			<tr>
+				<td></td>
+				<td>{{sub.qnno}}</td>
+				<td>{{sub.message}}</td>
+				<td>{{sub.mark}}</td>
+				<td>{{sub.timeofs}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "./layout.html" %}
+
+{% block css_link %}
+{% load static %}
+<link rel = "stylesheet" href = "{% static 'css/styles1.css' %}">
+{% endblock %}
+
+{% block js_link %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src = "{% static 'js/script1.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+Contest Home Page
+{% endblock %}
+
+{% block top_part %}
+<h1>E-CONTEST</h1>
+<div id = "hello">Welcome {{name}} </div>
+<form id = "complete_test" name = "complete_test" method = "POST" action = "{% url 'dashboard' %}">{% csrf_token %}
+	<input name = "quit" type = "submit" value = "Complete Test" id = "quit" onclick = "confirmSubmit(event);">
+	<input type = "hidden" name = "remTime" id = "remTime" value = "{{rem_time}}">
+</form>
+<div id = "timer">Timer
+</div>
+{% endblock %}
+
+{% block page_content %}
+<div class = "content">
+	<div id="navbar">
+		<ul>
+			<li><a href = "https://jsfiddle.net/ao6egwh9/3/" target = "_blank">Online Compiler</a></li>
+			<li><a href = "{% url 'standings' %}">Standings</a></li>
+			<li><a href = "{% url 'submissions' %}">Submissions</a></li>
+		</ul>
+	</div>
+	
+	<div id="snackbar">
+		{% if messages %}
+			{% for message in messages %}
+				{{message}}
+			{% endfor %}
+		{% endif %}
+	</div>
+	<div class = "custom-select">
+		<select form = "code-edit" id = "question-select" name = "question-select" onchange = "main_page_content()">
+			<option value = "--">--</option>
+			<option value = "INS">Syntax Sheet</option>
+			<option value = "QN1">Question 1</option>
+			<option value = "QN2">Question 2</option>
+			<option value = "QN3">Question 3</option>
+			<option value = "QN4">Question 4</option>
+			<option value = "QN5">Question 5</option>
+			<option value = "QN6">Question 6</option>
+			<option value = "QN7">Question 7</option>
+			<option value = "QN8">Question 8</option>
+		</select>
+	</div>
+	<div id = "instr-box">
+
+	</div>
+	<div id = "question-box">
+		<!-- <iframe id = "frame1" frameborder="0" height = "100%" width = "100%"> </iframe> -->
+	</div>
+
+	<div id = "code-editor">
+		<h3>CODE EDITOR</h3>
+		<form name = "code-edit" id = "code-edit" method = "POST" action = "{% url 'dashboard' %}">{% csrf_token %}
+			<textarea name = "code" id = "code-inp" placeholder = "Your code goes here...." required></textarea>
+			<input type = "hidden" name = "remtime" id = "remtime" value = "{{rem_time}}">
+			<input name = "submit" type = "submit" value = "Submit Code" id = "code-sub">
+		</form>
+	</div>
+
+</div>
+{% endblock %}
