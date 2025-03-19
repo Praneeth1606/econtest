@@ -13,7 +13,7 @@ load_dotenv(os.path.join(Path(__file__).resolve().parent, '.env'))
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5k+w6!!@^j3+9=u!^-p1_o8-oqq8sub!%!s2ew*_aiwh!32pz2'
+SECRET_KEY = 'django-insecure-5k+w6!!@^j3+9=u!^*-p1_o8-oqq8sub!%!s2ew*_aiwh!32pz2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -91,6 +91,8 @@ print(f"PGDATABASE: {getenv('PGDATABASE')}")
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = "app.Participant"
 
 AUTH_PASSWORD_VALIDATORS = [
     {

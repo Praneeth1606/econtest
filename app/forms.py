@@ -1,59 +1,37 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from .models import Participant
 
-from .models import User
 
-# class ProductForm(forms.ModelForm):
-#     title       = forms.CharField(label='', 
-#                     widget=forms.TextInput(attrs={"placeholder": "Your title"}))
-#     description = forms.CharField(
-#                         required=False, 
-#                         widget=forms.Textarea(
-#                                 attrs={
-#                                     "placeholder": "Your description",
-#                                     "class": "new-class-name two",
-#                                     "id": "my-id-for-textarea",
-#                                     "rows": 20,
-#                                     'cols': 120
-#                                 }
-#                             )
-#                         )
-#     price       = forms.DecimalField(initial=199.99)
-    
-#     class Meta:
-#         model = Product
-#         fields = [
-#             'title',
-#             'description',
-#             'price'
-#         ]
 
 class LoginForm(forms.Form):
     username = forms.CharField(label='Username', max_length=100)
     password = forms.CharField(label='Password', max_length=30, widget=forms.PasswordInput)
 
 
-class SignupForm(forms.ModelForm):
-    username = forms.CharField(label='Username', max_length=100)
-    password = forms.CharField(label='Password', max_length=30, widget=forms.PasswordInput)
-    name = forms.CharField(label='Name', max_length=100)
-    contact = forms.CharField(label='Contact', max_length=10)
+class SignupForm(UserCreationForm):
     email = forms.EmailField(label='Email', max_length=100)
+    first_name = forms.CharField(label='First_Name', max_length=100)
+    last_name = forms.CharField(label='Last_Name', max_length=100)
+    contact = forms.CharField(label='Contact', max_length=10)
 
     class Meta:
-        model = User
+        model = Participant
         fields = [
             'username',
-            'password',
-            'name',
+            'password1',
+            'password2',
+            'first_name',
+            'last_name',
             'contact',
             'email'
         ]
 
     def save(self, commit=True):
-        instance = super().save(commit=False)  # Get the instance without saving yet
-        instance.id = User.objects.count()  # Initialize missing fields
-        instance.done = False  # Setting default value
-        instance.rem_time = 7200  # Setting default value
+        instance = super().save(commit=False)  
+        instance.contact = self.cleaned_data["contact"]
+        instance.done = False  
+        instance.rem_time = 7200
         if commit:
             instance.save()
         return instance

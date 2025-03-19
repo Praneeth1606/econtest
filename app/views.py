@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .forms import SignupForm
 from .forms import LoginForm
-from .models import User
+from .models import Participant
 from .models import Result
 from .models import Submission
 from datetime import datetime, timedelta, timezone
@@ -18,8 +18,8 @@ ist = pytz.timezone("Asia/Kolkata")
 pno = 0
 
 
-startTime = ist.localize(datetime(2025,3,10,8,5,00)) #Datetimes in IST
-endTime = ist.localize(datetime(2025,3,10,10,5,00))
+startTime = ist.localize(datetime(2025,3,18,22,53,00)) #Datetimes in IST
+endTime = ist.localize(datetime(2025,3,19,0,53,00))
 
 def checkStartTime():
 	currTime = datetime.now(ist)
@@ -37,46 +37,47 @@ def returnRemTime():
 	return int((endTime - datetime.now(ist)).total_seconds())
 
 def setRemTime(request):
-	User.objects.filter(id=request.session['userid']).update(rem_time=returnRemTime())
+	Participant.objects.filter(username=request.session['username']).update(rem_time=returnRemTime())
 	return
 
 
 def disconnect_user(request): #check this
     
-     if request.session.has_key('userid'):
-        usr = User.objects.get(id = request.session['userid'])
+    if request.session.has_key('username'):
+        usr = Participant.objects.get(name = request.session['username'])
         usr.rem_time = returnRemTime()
         usr.done = True
         usr.save()
-     request.session.flush()
+    request.session.flush()
 		
     
 
 
 def index_view(request) :
 	try:
-		request.session['userid']
+		request.session['username']
 	except KeyError:
 		return redirect("login")
 	return redirect("dashboard")
 
 
 def register_view(request):
-    if 'userid' in request.session:
+    if 'username' in request.session:
         return redirect("dashboard")
     
     error = None
     form1 = SignupForm(request.POST or None)
     if checkEndTime():
         disconnect_user(request)
-        error = "Contest ended at UTC " + endTime.strftime("%H:%M:%S %d/%m/%Y") + '\nFind standings at e-contest.herokuapp.com/standings'
-        return redirect("standings")
+        error = "Contest ended at UTC " + endTime.strftime("%H:%M:%S %d/%m/%Y")
+        return standings_view(request, error)
     if form1.is_valid():
         form1.save()
         form1 = SignupForm()
         return redirect("login")
     elif form1.errors:
         error = "username already exists"
+        # error = form1.error_messages
     context = {
         'form': form1,
         'error' : error
@@ -87,7 +88,7 @@ def register_view(request):
 
 
 def login_view(request):
-    if 'userid' in request.session:
+    if 'username' in request.session:
         return redirect("dashboard")
     
     if request.method == "POST":
@@ -100,31 +101,25 @@ def login_view(request):
 
         if checkEndTime():
             disconnect_user(request)
-            error = "Contest ended at IST " + endTime.strftime("%H:%M:%S %d/%m/%Y") + '\nFind standings at e-contest.herokuapp.com/standings'
-            return render(request, 'login.html', {'form':form, 'error':error})
+            error = "Contest ended at IST " + endTime.strftime("%H:%M:%S %d/%m/%Y") 
+            return standings_view(request, error)
         
         if form.is_valid():
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
-            # user = User.objects.get(username= username)
-            if not User.objects.filter(username=username).exists():
-                    error = 'Username or Password Incorrect'
-            # user = authenticate(username=username, password=password)
+            user = authenticate(request, username=username, password=password)
+            if user is None:
+                error = 'Username or Password Incorrect'
             else:
-                user = User.objects.get(username=username)
-                if user.password == password:
-                    if user.done == True :
-                        error = "Already Completed the Contest"
-                    else :
-                        request.session.modified = True
-                        request.session['username'] = user.username
-                        request.session['userid'] = user.id
-                        request.session['time'] = returnRemTime()
-                        request.session.set_expiry(timedelta(hours=6).total_seconds())
-                        # return redirect("dashboard")?
-                        return render(request, "index.html", {'rem_time': returnRemTime()})
+                if user.done == True :
+                    error = "Already Completed the Contest"
                 else :
-                    error = 'Username or Password Incorrect'
+                    login(request, user)
+                    request.session.modified = True
+                    request.session['username'] = user.username
+                    request.session['time'] = returnRemTime()
+                    request.session.set_expiry(timedelta(hours=6).total_seconds())
+                    return render(request, "index.html", {'rem_time': returnRemTime()})
                     
             return render(request, "login.html", {'form':form, 'error':error})
 
@@ -132,27 +127,21 @@ def login_view(request):
     return render(request, "login.html", {'form': form})
 
 def dashboard_view(request):
-    if 'userid' in request.session:
+    if 'username' in request.session:
         setRemTime(request)
 
         if checkEndTime():
             disconnect_user(request)
-            # flash("Contest ended at " + endTime.strftime("%H:%M:%S %d/%m/%Y"))
             error = "Contest ended at IST " + endTime.strftime(
-                "%H:%M:%S %d/%m/%Y") + '\nFind standings at e-contest.herokuapp.com/standings'
-            return render(request, 'login.html', {'form':LoginForm(), 'error':error})
+                "%H:%M:%S %d/%m/%Y")
+            return standings_view(request, error)
         
     
         if request.method == 'POST' and ('quit' in request.POST or 'remTime' in request.POST):
-            # user = request.user
-            user = User.objects.get(id = request.session['userid'])
+            user = Participant.objects.get(username = request.session['username'])
             user.done = True
             user.rem_time = request.POST.get('remTime', None)
             user.save()
-            # request.session.modified = True
-            # request.session.pop('userid',None)
-            # request.session.pop('username',None)
-            # request.session.pop('time',None)
             request.session.flush()
             return redirect("login")
         
@@ -160,18 +149,16 @@ def dashboard_view(request):
             setRemTime(request)
             if checkEndTime():
                 disconnect_user(request)
-                # flash("Contest ended at " + endTime.strftime("%H:%M:%S %d/%m/%Y"))
                 error = "Contest ended at IST " + endTime.strftime(
                     "%H:%M:%S %d/%m/%Y")
-                return render('submissions.html', {'error':error })
-            user = User.objects.get(id=request.session['userid']) 
+                return standings_view(request, error)
+            user = Participant.objects.get(username=request.session['username']) 
             if not Result.objects.filter(user = user).exists():
                 res = Result(user = user)
                 res.save()
             CODE = request.POST.get('code')
             qn = str(request.POST.get('question-select'))
-            #initTime = float(request.form.get('remtime'))
-            initTime = returnRemTime()    # change initTime name
+            initTime = returnRemTime()
 
             res = 'Nothing yet'
 
@@ -260,14 +247,13 @@ def dashboard_view(request):
                 pno += 1
                 currRes.tot_score = sum([e for e in scorel if e is not None])
                 currRes.tot_time = sum([decimal.Decimal(e) for e in timel if e is not None])
-                #currRes.user.rem_time = 6000-init_time
                 user.rem_time = int((endTime-startTime).total_seconds()) - init_time
                 currRes.save()
                 user.save()
             threading.Thread(target = evaluate,args = (CODE,qn,int((endTime-startTime).total_seconds())-initTime)).start()
             messages.success(request, "Your submission was successful!")
             return redirect("dashboard")
-        user = User.objects.get(id = request.session['userid'])
+        user = Participant.objects.get(username = request.session['username'])
         rem_time = user.rem_time
         if rem_time > 0 :
             return render(request, 'index.html',{'name' : request.session['username'],'rem_time' : rem_time})
@@ -280,19 +266,18 @@ def dashboard_view(request):
     else:
         return redirect("login")
     
-def standings_view(request) :
+def standings_view(request, error = None) :
     res = Result.objects.order_by("-tot_score","tot_time")
-    return render(request, 'standings.html',{'results' : res})
+    return render(request, 'standings.html',{'results' : res, 'error' : error})
 
 def submissions_view(request) :
-    if 'userid' in request.session:
+    if 'username' in request.session:
         if checkEndTime():
             disconnect_user(request)
-            # flash("Contest ended at " + endTime.strftime("%H:%M:%S %d/%m/%Y"))
             error = "Contest ended at IST " + endTime.strftime(
-                "%H:%M:%S %d/%m/%Y") + '\nFind standings at e-contest.herokuapp.com/standings'
-            return render('login.html', {'form':LoginForm(), 'error':error})
-        usr = User.objects.get(id = request.session['userid'])
+                "%H:%M:%S %d/%m/%Y")
+            return standings_view(request, error)
+        usr = Participant.objects.get(username = request.session['username'])
         subs = usr.submission.all()
         return render(request, 'submissions.html',{'name' : request.session['username'],'submissions' : subs})
     else:

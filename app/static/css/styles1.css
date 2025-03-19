@@ -19,45 +19,6 @@ body, html {
 	z-index: 99;
 }
 
-#power {
-	z-index: 100;
-	position: relative;
-	font-family: Arial sans-serif serif;
-	top : 20%;
-}
-
-#amex {
-	width: 30%;
-	height: 50%;
-    z-index: 100;
-    background: url("./img/arcesium.png");
-    background-repeat: no-repeat;
-	background-size : 100% 100%; 
-    position :relative;
-    top : 25%;
-    -webkit-animation: mymove 3s infinite; /* Safari 4.0 - 8.0 */
-    animation: mymove 3s infinite;
-}
-
-@-webkit-keyframes mymove {
-	0%   {left: -40%;opacity: 0;}
-    20%  {left: 20%;opacity: 0.8;}
-    40%  {left: 30%;opacity: 1;}
-    60%  {left: 30%;opacity: 1;}
-    80%  {left: 40%;opacity: 0.8;}
-    100% {left: 140%;opacity: 0;}
-}
-
-@keyframes mymove {
-	0%   {left: -40%;opacity: 0;}
-    20%  {left: 20%;opacity: 0.8;}
-    40%  {left: 30%;opacity: 1;}
-    60%  {left: 30%;opacity: 1;}
-    80%  {left: 40%;opacity: 0.8;}
-    100% {left: 140%;opacity: 0;}
-}
-
-
 .container {
 	position: fixed;
 	width : 100%;
@@ -88,7 +49,7 @@ body, html {
 
 h1 {
 	margin : 0;
-	padding-top : 0.25em;
+	padding-top : 0.35em;
 	text-align: center;
 	color: antiquewhite;
 	vertical-align: middle;
@@ -98,11 +59,11 @@ h1 {
 	text-align : left; 
 	color: antiquewhite;
 	padding-right: 1em;
-	font-size: 1.2em;
+	font-size: 1.25em;
 	position: relative;
 	z-index : 1;
-	top : -2em;
-	left : 320px;
+	top: -1.25em;
+	left : 270px;
 	float : right;
 	width : 30%;
 	height : 2.8em;
@@ -118,6 +79,7 @@ h1 {
 
 #loginform {
 	position : fixed;
+	border-radius: 5px;
 	margin : 200px 750px 400px 700px;
 	width : 450px;
 	height : 350px;
@@ -127,10 +89,11 @@ h1 {
 
 #registerform {
 	position : fixed;
-	margin : 200px 750px 400px 700px;
+	border-radius: 5px;
+	margin : 125px 750px 400px 700px;
 	width : 450px;
-	height : 600px;
-	padding : 40px 40px 40px 70px;
+	height : 750px;
+	padding : 30px 70px 40px 70px;
 	background-color : #EBD3F8;
 	
 }
@@ -138,6 +101,7 @@ h1 {
 input[type=text], input[type=password], input[type=email] {
   width: 300px;
   height : 40px;
+  border-radius: 3px;
   border: 0.1em solid rgb(0, 0, 0);
   font-size: large;
 }
@@ -148,6 +112,7 @@ input[type=submit] {
 	height: 60px;
 	font-size: x-large;
 	font-weight: 400;
+	border-radius: 4px;
   margin: 20.4px 80px;
   background-color : #AD49E1;
   color : rgb(0, 0, 0);
@@ -179,6 +144,7 @@ input[type=submit]:hover {
 	height : 45em;
 	top : 12.5em;
 	left : 8%;
+	border-radius: 4px;
 	background-color: whitesmoke;
 	overflow: auto;
 	white-space: pre-wrap;
@@ -198,6 +164,7 @@ input[type=submit]:hover {
 	height : 45em;
 	top : 12.5em;
 	left : 1%;
+	border-radius: 4px;
 	background-color: whitesmoke;
 	overflow: auto;
 	white-space: pre-wrap;
@@ -217,12 +184,42 @@ input[type=submit]:hover {
 	width : 55.5%;
 	height : 45em;
 	top : 12.5em;
+	border-radius: 4px;
 	left : 40%;
 	font-size: 16px;
 	display: none;
 	border : 3px dotted whitesmoke;
 }
 
+#code-inp {
+	width: 98%;
+    height : 35em;
+    padding-top: 0.6em;
+    padding-bottom: 0.6em;
+    padding-left: 0.6em;
+    padding-right: 0.6em;
+    margin: 1.2em 0 1.2em 1%;
+    display : block;
+	border-radius: 4px;
+    border: 3px solid rgb(0, 0, 0);
+    font-size: large;
+    white-space: pre;
+    overflow: scroll;
+}
+
+#code-sub {
+	width: 15%;
+    height : 2em;
+    padding-left: 0.6em;
+    padding-right: 0.6em;
+    margin: 1.2em 0 1.2em 1%;
+    display: inline-block;
+	border-radius: 2px;
+    font-size: 100%;
+	color :#2E073F;
+	background-color: whitesmoke;
+    border: 0.1em solid rgb(0, 0, 0);
+}
 
 ul {
 	position : fixed;
@@ -248,7 +245,7 @@ li a {
 	background-color: #AD49E1;
 	height : 4em;
 	text-align: center;
-	padding: 14px 16px;
+	padding: 19px 16px;
 	text-decoration: none;
 	font-size: 20px;
 }
@@ -266,34 +263,6 @@ h3 {
 	padding : 0;
 	margin : 0;
 	color: white;
-}
-
-#code-inp {
-	width: 98%;
-    height : 40em;
-    padding-top: 0.6em;
-    padding-bottom: 0.6em;
-    padding-left: 0.6em;
-    padding-right: 0.6em;
-    margin: 1.2em 0 1.2em 1%;
-    display : block;
-    border: 3px solid rgb(0, 0, 0);
-    font-size: large;
-    white-space: pre;
-    overflow: scroll;
-}
-
-#code-sub {
-	width: 15%;
-    height : 2em;
-    padding-left: 0.6em;
-    padding-right: 0.6em;
-    margin: 1.2em 0 1.2em 1%;
-    display: inline-block;
-    font-size: 100%;
-	color :#2E073F;
-	background-color: whitesmoke;
-    border: 0.1em solid rgb(0, 0, 0);
 }
 
 #quit {

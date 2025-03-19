@@ -6,9 +6,7 @@ window.onload = () => {
 	var time = document.querySelector('#remTime');
 	var time2 = document.querySelector('#remtime');
 	if(typeof(Storage) !== "undefined") {
-		// if(!localStorage.getItem("remTime")) {
 		localStorage.setItem("remTime",time.value);
-		// }
 	    var rt = Number(localStorage.getItem("remTime"));
 	    disp.innerHTML = timeformat(rt);
 	    time.value = rt;
@@ -55,8 +53,6 @@ function main_page_content() {
 	var boxi = document.querySelector('#instr-box');
 	var box1 = document.querySelector('#question-box');
 	var box2 = document.querySelector('#code-editor');
-	// var l1 = document.querySelector('#quick-link-left');
-	//var fr = document.querySelector('#frame1');
 
 	if (val == '--') {
 		box1.style.display = 'none';
