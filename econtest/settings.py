@@ -13,11 +13,12 @@ load_dotenv(os.path.join(Path(__file__).resolve().parent, '.env'))
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5k+w6!!@^j3+9=u!^*-p1_o8-oqq8sub!%!s2ew*_aiwh!32pz2'
+SECRET_KEY = getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = ["18.233.10.221", "localhost", "127.0.0.1"]
 ALLOWED_HOSTS = []
 
 
@@ -126,6 +127,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+# STATIC_ROOT = "/home/ubuntu/econtest/app/static"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
