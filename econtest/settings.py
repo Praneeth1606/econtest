@@ -18,8 +18,8 @@ SECRET_KEY = getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ["18.233.10.221", "localhost", "127.0.0.1"]
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["44.204.79.149", "localhost", "127.0.0.1"]
+# ALLOWED_HOSTS = []
 
 
 # Application definition
