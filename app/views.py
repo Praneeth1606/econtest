@@ -18,8 +18,8 @@ ist = pytz.timezone("Asia/Kolkata")
 pno = 0
 
 
-startTime = ist.localize(datetime(2025,3,18,22,53,00)) #Datetimes in IST
-endTime = ist.localize(datetime(2025,3,19,0,53,00))
+startTime = ist.localize(datetime(2025,5,26,18,35,00)) #Datetimes in IST
+endTime = ist.localize(datetime(2025,5,29,23,35,00))
 
 def checkStartTime():
 	currTime = datetime.now(ist)

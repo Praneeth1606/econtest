@@ -10,7 +10,7 @@ def interpret(program,inputPath,outputPath,Q) :
     global MAX_CELLS, MAX_VAL, MIN_VAL, MAX_SIZE
     global lineno, ptr, data, brackets, inp_buff, out_buff, inp_ind
     out_buff = ''
-    f1 = open("./check.txt", 'w')
+    f1 = open("/home/ubuntu/econtest/app/check.txt", 'w')
     strlen = len(program)
     if (strlen > MAX_SIZE) :
         Q.put("MEMORY LIMIT EXCEEDED")
@@ -119,6 +119,7 @@ def interpret(program,inputPath,outputPath,Q) :
 
     with open(outputPath,'w') as f:
         f.write(out_buff)
+        print(outputPath)
     f1.close()
     Q.put("ANSWER WRITTEN")
     return

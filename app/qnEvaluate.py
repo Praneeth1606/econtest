@@ -4,7 +4,6 @@ import re
 import multiprocessing as mp
 from app.compiler import interpret
 
-noTC = {'1': 10,'2': 19,'3': 19,'4': 19,'5': 16,'6': 19,'7': 19}
 
 def score(code,qn_no,pno) :
 	count = 0
@@ -21,7 +20,7 @@ def score(code,qn_no,pno) :
 				prc.daemon = True
 				prc.start()
 
-				prc.join(5)
+				prc.join(10)
 
 				if prc.is_alive() :
 					prc.terminate()
